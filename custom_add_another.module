@@ -52,14 +52,15 @@ function custom_add_another_form_field_ui_field_edit_form_alter(&$form, &$form_s
  */
 function custom_add_another_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
   foreach ($form_state['field'] as $field_name => $field) {
-    if (isset($field[$langcode])) {
-      $cardinality = $field[$langcode]['field']['cardinality'];
-      $instance_settings = $field[$langcode]['instance']['settings'];
+    $this_langcode = field_language($entity_type, $entity, $field_name, $langcode);
+    if (isset($field[$this_langcode])) {
+      $cardinality = $field[$this_langcode]['field']['cardinality'];
+      $instance_settings = $field[$this_langcode]['instance']['settings'];
       if (($cardinality == FIELD_CARDINALITY_UNLIMITED) && !empty($instance_settings['custom_add_another'])) {
         // Go find and set the add another button in the form.
-        if (isset($form[$field_name][$langcode]['add_more']) && ($form[$field_name][$langcode]['add_more']['#type'] == 'submit')) {
+        if (isset($form[$field_name][$this_langcode]['add_more']) && ($form[$field_name][$this_langcode]['add_more']['#type'] == 'submit')) {
           // @TODO: workout how to translate this value.
-          $form[$field_name][$langcode]['add_more']['#value'] = $instance_settings['custom_add_another'];
+          $form[$field_name][$this_langcode]['add_more']['#value'] = $instance_settings['custom_add_another'];
         }
       }
     }

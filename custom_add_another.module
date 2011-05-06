@@ -53,7 +53,7 @@ function custom_add_another_form_field_ui_field_edit_form_alter(&$form, &$form_s
 function custom_add_another_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
   foreach ($form_state['field'] as $field_name => $field) {
     $this_langcode = field_language($entity_type, $entity, $field_name, $langcode);
-    if (isset($field[$this_langcode])) {
+    if (isset($field[$this_langcode]) && isset($field[$this_langcode]['field']) && isset($field[$this_langcode]['instance'])) {
       $cardinality = $field[$this_langcode]['field']['cardinality'];
       $instance_settings = $field[$this_langcode]['instance']['settings'];
       if (($cardinality == FIELD_CARDINALITY_UNLIMITED) && !empty($instance_settings['custom_add_another'])) {

@@ -68,7 +68,7 @@ function custom_add_another_preprocess_field_multiple_value_form(&$variables) {
   foreach (element_children($variables['element']) as $child) {
     if (isset($variables['element'][$child]['#custom_add_another_value'])) {
       if (isset($variables['element']['add_more']['#value'])) {
-        $variables['element']['add_more']['#value'] = $variables['element'][$child]['#custom_add_another_value'];
+        $variables['element']['add_more']['#value'] = t($variables['element'][$child]['#custom_add_another_value']);
         break;
       }
     }

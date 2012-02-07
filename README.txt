@@ -5,6 +5,11 @@ This is a very simple module that allows you to customise the text of the 'Add a
 
 If your field supports 'unlimited' values then you are offered the option of customising the 'Add another item' button text. This setting is stored per 'bundle', so you can have different button text if you use the same field in two places.
 
+Requirements
+------------
+
+This module requires Drupal core 7.8 or higher.
+
 Usage
 -----
 

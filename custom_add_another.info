@@ -1,5 +1,5 @@
 name = Custom add another
 description = "Allows modification of the 'Add another item' button on fields"
 package = Fields
-dependencies[] = field
+dependencies[] = field (>=7.8)
 core = 7.x

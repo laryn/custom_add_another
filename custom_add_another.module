@@ -27,36 +27,41 @@ function custom_add_another_field_info_alter(&$info) {
 function custom_add_another_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
   $instance = $form['#instance'];
 
-  $form['instance']['settings']['custom_add_another'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Custom add another item button'),
-    '#description' => t("If the number of items in this field is set to 'Unlimited' then you might get a button that allows you to 'Add another item'. You may customise the text for that button here, an empty value will just use the default value for the button text."),
-    // Add a hint for the empty value if hint module is around.
-    '#hint' => t('Add another item'),
-    '#default_value' => $instance['settings']['custom_add_another'],
+  if (empty($form['#field']['locked'])) {
 
-    // Hidden when the 'Number of values' is not unlimited.
-    '#states' => array(
-      'visible' => array(
-        ':input[name="field[cardinality]"]' => array('value' => (string)FIELD_CARDINALITY_UNLIMITED),
-      ),
-    ),
-  );
-  $form['instance']['settings']['custom_remove'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Custom remove button'),
-    '#description' => t("If the number of items in this field is set to 'Unlimited' then you might get a button that allows you to 'Remove'. You may customise the text for that button here, an empty value will just use the default value for the button text."),
-    // Add a hint for the empty value if hint module is around.
-    '#hint' => t('Remove this item'),
-    '#default_value' => $instance['settings']['custom_remove'],
+    $form['instance']['settings']['custom_add_another'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Custom add another item button'),
+      '#description' => t("If the number of items in this field is set to 'Unlimited' then you might get a button that allows you to 'Add another item'. You may customise the text for that button here, an empty value will just use the default value for the button text."),
+      // Add a hint for the empty value if hint module is around.
+      '#hint' => t('Add another item'),
+      '#default_value' => $instance['settings']['custom_add_another'],
 
-    // Hidden when the 'Number of values' is not unlimited.
-    '#states' => array(
-      'visible' => array(
-        ':input[name="field[cardinality]"]' => array('value' => (string)FIELD_CARDINALITY_UNLIMITED),
+      // Hidden when the 'Number of values' is not unlimited.
+      '#states' => array(
+        'visible' => array(
+          ':input[name="field[cardinality]"]' => array('value' => (string)FIELD_CARDINALITY_UNLIMITED),
+        ),
       ),
-    ),
-  );
+    );
+
+    $form['instance']['settings']['custom_remove'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Custom remove button'),
+      '#description' => t("If the number of items in this field is set to 'Unlimited' then you might get a button that allows you to 'Remove'. You may customise the text for that button here, an empty value will just use the default value for the button text."),
+      // Add a hint for the empty value if hint module is around.
+      '#hint' => t('Remove this item'),
+      '#default_value' => $instance['settings']['custom_remove'],
+
+      // Hidden when the 'Number of values' is not unlimited.
+      '#states' => array(
+        'visible' => array(
+          ':input[name="field[cardinality]"]' => array('value' => (string)FIELD_CARDINALITY_UNLIMITED),
+        ),
+      ),
+    );
+
+  }
 }
 
 /**

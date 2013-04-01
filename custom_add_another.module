@@ -13,6 +13,7 @@ function custom_add_another_field_info_alter(&$info) {
     $field_type_info += array('instance_settings' => array());
     $field_type_info['instance_settings'] += array(
       'custom_add_another' => '',
+      'custom_remove' => '',
     );
   }
 }
@@ -41,6 +42,21 @@ function custom_add_another_form_field_ui_field_edit_form_alter(&$form, &$form_s
       ),
     ),
   );
+  $form['instance']['settings']['custom_remove'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Custom remove button'),
+    '#description' => t("If the number of items in this field is set to 'Unlimited' then you might get a button that allows you to 'Remove'. You may customise the text for that button here, an empty value will just use the default value for the button text."),
+    // Add a hint for the empty value if hint module is around.
+    '#hint' => t('Remove this item'),
+    '#default_value' => $instance['settings']['custom_remove'],
+
+    // Hidden when the 'Number of values' is not unlimited.
+    '#states' => array(
+      'visible' => array(
+        ':input[name="field[cardinality]"]' => array('value' => (string)FIELD_CARDINALITY_UNLIMITED),
+      ),
+    ),
+  );
 }
 
 /**
@@ -49,11 +65,19 @@ function custom_add_another_form_field_ui_field_edit_form_alter(&$form, &$form_s
 function custom_add_another_field_widget_form_alter(&$element, &$form_state, $context) {
   $instance = $context['instance'];
   $field = $context['field'];
-  if (($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED) && !empty($instance['settings']['custom_add_another'])) {
-    // Pop the add another value to be used on the add more button into the
-    // widget here for use later by
-    // custom_add_another_preprocess_field_multiple_value_form().
-    $element['#custom_add_another_value'] = $instance['settings']['custom_add_another'];
+  if (($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED)) {
+    if  (!empty($instance['settings']['custom_add_another'])) {
+      // Pop the add another value to be used on the add more button into the
+      // widget here for use later by
+      // custom_add_another_preprocess_field_multiple_value_form().
+      $element['#custom_add_another_value'] = $instance['settings']['custom_add_another'];
+    }
+    if  (!empty($instance['settings']['custom_remove'])) {
+      // Pop the add another value to be used on the add more button into the
+      // widget here for use later by
+      // custom_add_another_preprocess_field_multiple_value_form().
+      $element['#custom_remove'] = $instance['settings']['custom_remove'];
+    }
   }
 }
 
@@ -66,10 +90,12 @@ function custom_add_another_field_widget_form_alter(&$element, &$form_state, $co
  */
 function custom_add_another_preprocess_field_multiple_value_form(&$variables) {
   foreach (element_children($variables['element']) as $child) {
-    if (isset($variables['element'][$child]['#custom_add_another_value'])) {
-      if (isset($variables['element']['add_more']['#value'])) {
+    if (isset($variables['element'][$child]['#custom_add_another_value']) || isset($variables['element'][$child]['#custom_remove'])) {
+      if (isset($variables['element'][$child]['#custom_add_another_value']) && isset($variables['element']['add_more']['#value']) && $variables['element']['add_more']['#value'] != t($variables['element'][$child]['#custom_add_another_value'])) {
         $variables['element']['add_more']['#value'] = t($variables['element'][$child]['#custom_add_another_value']);
-        break;
+      }
+      if (isset($variables['element'][$child]['#custom_remove']) && isset($variables['element'][$child]['remove_button']['#value'])) {
+        $variables['element'][$child]['remove_button']['#value'] = t($variables['element'][$child]['#custom_remove']);
       }
     }
   }

@@ -1,0 +1,9 @@
+name = Custom add another translation
+description = Provides i18n field integration for Custom add another module
+package = Multilingual - Internationalization
+core = 7.x
+
+dependencies[] = custom_add_another
+dependencies[] = i18n_field
+
+files[] = i18n_custom_add_another.test

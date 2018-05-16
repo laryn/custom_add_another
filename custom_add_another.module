@@ -26,21 +26,16 @@ function custom_add_another_field_info_alter(&$info) {
  */
 function custom_add_another_form_field_ui_field_edit_form_alter(&$form, &$form_state, $form_id) {
   $instance = $form['#instance'];
-
   if (empty($form['#field']['locked'])) {
-
     $form['instance']['custom_add_another'] = array(
       '#type' => 'textfield',
       '#title' => t('Custom add another item button'),
-      '#description' => t("If the number of items in this field is set to 'Unlimited' then you might get a button that allows you to 'Add another item'. You may customise the text for that button here, an empty value will just use the default value for the button text."),
-      // Add a hint for the empty value if hint module is around.
-      '#hint' => t('Add another item'),
-      '#default_value' => isset($instance['custom_add_another']) ? $instance['custom_add_another'] : '',
-
+      '#description' => t("If the number of items in this field is set to 'Unlimited' then you might get a button that allows you to 'Add another item'. You may customize the text for that button here, an empty value will just use the default value for the button text."),
+      '#default_value' => isset($instance['settings']['custom_add_another']) ? $instance['settings']['custom_add_another'] : '',
       // Hidden when the 'Number of values' is not unlimited.
       '#states' => array(
         'visible' => array(
-          ':input[name="field[cardinality]"]' => array('value' => (string)FIELD_CARDINALITY_UNLIMITED),
+          ':input[name="field[cardinality]"]' => array('value' => (string) FIELD_CARDINALITY_UNLIMITED),
         ),
       ),
     );
@@ -48,19 +43,15 @@ function custom_add_another_form_field_ui_field_edit_form_alter(&$form, &$form_s
     $form['instance']['custom_remove'] = array(
       '#type' => 'textfield',
       '#title' => t('Custom remove button'),
-      '#description' => t("If the number of items in this field is set to 'Unlimited' then you might get a button that allows you to 'Remove'. You may customise the text for that button here, an empty value will just use the default value for the button text."),
-      // Add a hint for the empty value if hint module is around.
-      '#hint' => t('Remove this item'),
-      '#default_value' => isset($instance['custom_remove']) ? $instance['custom_remove'] : '',
-
+      '#description' => t("If the number of items in this field is set to 'Unlimited' then you might get a button that allows you to 'Remove'. You may customize the text for that button here, an empty value will just use the default value for the button text."),
+      '#default_value' => isset($instance['settings']['custom_remove']) ? $instance['settings']['custom_remove'] : '',
       // Hidden when the 'Number of values' is not unlimited.
       '#states' => array(
         'visible' => array(
-          ':input[name="field[cardinality]"]' => array('value' => (string)FIELD_CARDINALITY_UNLIMITED),
+          ':input[name="field[cardinality]"]' => array('value' => (string) FIELD_CARDINALITY_UNLIMITED),
         ),
       ),
     );
-
   }
 }
 
@@ -69,20 +60,19 @@ function custom_add_another_form_field_ui_field_edit_form_alter(&$form, &$form_s
  */
 function custom_add_another_field_widget_form_alter(&$element, &$form_state, $context) {
   $instance = module_exists('i18n_custom_add_another') ? i18n_string_object_translate('field_instance', $context['instance']) : $context['instance'];
-
   $field = $context['field'];
   if (($field['cardinality'] == FIELD_CARDINALITY_UNLIMITED)) {
-    if  (!empty($instance['custom_add_another'])) {
+    if (!empty($instance['settings']['custom_add_another'])) {
       // Pop the add another value to be used on the add more button into the
       // widget here for use later by
       // custom_add_another_preprocess_field_multiple_value_form().
-      $element['#custom_add_another_value'] = $instance['custom_add_another'];
+      $element['#custom_add_another_value'] = $instance['settings']['custom_add_another'];
     }
-    if  (!empty($instance['custom_remove'])) {
+    if (!empty($instance['settings']['custom_remove'])) {
       // Pop the add another value to be used on the add more button into the
       // widget here for use later by
       // custom_add_another_preprocess_field_multiple_value_form().
-      $element['#custom_remove'] = $instance['custom_remove'];
+      $element['#custom_remove'] = $instance['settings']['custom_remove'];
     }
   }
 }

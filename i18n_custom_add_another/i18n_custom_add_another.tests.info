@@ -1,0 +1,6 @@
+[i18nCustomAddAnotherTestCase]
+name = Custom add another translation
+description = Custom add another translation functions
+group = Custom add another
+file = i18n_custom_add_another.test
+
